@@ -32,19 +32,29 @@ namespace ECommerceAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Customer>()
            .ToTable("Customers");
-            //SeedRoles(modelBuilder);
+
+            SeedRoles(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
-        //private static void SeedRoles(ModelBuilder builder)
-        //{
-        //    builder.Entity<Role>().HasData(
-        //          new Role { Name = "Admin"},
-        //          new Role { Name = "User" }
-        //    );
-        //}
+        private static void SeedRoles(ModelBuilder builder)
+        {
+            builder.Entity<Role>().HasData(
+                  new Role
+                  {
+                      Id = 1,
+                      Name = "Admin "
+                  },
+                  new Role
+                  {
+                      Id = 2,
+                      Name = "Store Manager"
+                  }
+            );
+        }
 
     }
    
