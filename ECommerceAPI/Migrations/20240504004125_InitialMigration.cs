@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace ECommerceAPI.Migrations
 {
     /// <inheritdoc />
@@ -129,8 +131,8 @@ namespace ECommerceAPI.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    ProfileImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RoleId = table.Column<long>(type: "bigint", nullable: false)
+                    ProfileImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoleId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -139,8 +141,7 @@ namespace ECommerceAPI.Migrations
                         name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -176,15 +177,15 @@ namespace ECommerceAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    SalePrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    SalePrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
                     StockQuantity = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BrandId = table.Column<long>(type: "bigint", nullable: false),
                     CategoryId = table.Column<long>(type: "bigint", nullable: false),
-                    UpdatedUserId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedUserId = table.Column<long>(type: "bigint", nullable: false),
+                    UpdatedUserId = table.Column<long>(type: "bigint", nullable: true),
+                    CreatedUserId = table.Column<long>(type: "bigint", nullable: true),
                     CurrencyId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
@@ -328,8 +329,7 @@ namespace ECommerceAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     CartId = table.Column<long>(type: "bigint", nullable: false),
-                    ProductId = table.Column<long>(type: "bigint", nullable: false),
-                    CustomerId = table.Column<long>(type: "bigint", nullable: false)
+                    ProductId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -338,11 +338,6 @@ namespace ECommerceAPI.Migrations
                         name: "FK_CartItems_Carts_CartId",
                         column: x => x.CartId,
                         principalTable: "Carts",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CartItems_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -469,15 +464,39 @@ namespace ECommerceAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Brands",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1L, "Apple" },
+                    { 2L, "Samsung" },
+                    { 3L, "Nike" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1L, "Electronics" },
+                    { 2L, "Clothing" },
+                    { 3L, "Books" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1L, "Admin" },
+                    { 2L, "Store Manager" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_CartItems_CartId",
                 table: "CartItems",
                 column: "CartId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CartItems_CustomerId",
-                table: "CartItems",
-                column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CartItems_ProductId",
