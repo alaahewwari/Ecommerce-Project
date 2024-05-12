@@ -14,5 +14,7 @@ namespace ECommerceAPI.Endpoints
             }
             return Results.Ok(categories);
         }
+
+
     }
 }

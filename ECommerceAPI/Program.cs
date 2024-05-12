@@ -15,5 +15,12 @@ app.UseMiddleware();
 app.MapCategoryEndpoints();
 app.MapBrandEndpoints();
 app.MapProductEndpoints();
+app.MapOrderEndpoints();
+app.MapPaymentEndpoints();
+app.MapUserEndpoints();
+app.MapRoleEndpoints();
+app.MapCustomerEndpoints();
+app.MapCartEndpoints();
+app.MapReviewEndpoints();
 
 app.Run();
