@@ -2,7 +2,6 @@
 using ECommerceAPI.Data.Models;
 using ECommerceAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace ECommerceAPI.Repositories.Implementations
 {
@@ -11,7 +10,7 @@ namespace ECommerceAPI.Repositories.Implementations
         )
         : ICategoryRepository
     {
-       
+
         public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
             return await context.Categories.ToListAsync();
