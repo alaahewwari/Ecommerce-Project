@@ -16,5 +16,27 @@ namespace ECommerceAPI.Configurations
         {
             app.MapGet("/api/brands", BrandEndpoints.GetBrands);
         }
+        public static void MapReviewEndpoints(this WebApplication app)
+        {
+        }
+        public static void MapOrderEndpoints(this WebApplication app)
+        {
+        }
+        public static void MapUserEndpoints(this WebApplication app)
+        {
+        }
+        public static void MapCartEndpoints(this WebApplication app)
+        {
+        }
+        public static void MapCustomerEndpoints(this WebApplication app)
+        {
+        }
+        public static void MapRoleEndpoints(this WebApplication app)
+        {
+        }
+        public static void MapPaymentEndpoints(this WebApplication app)
+        {
+        }
+       
     }
 }
