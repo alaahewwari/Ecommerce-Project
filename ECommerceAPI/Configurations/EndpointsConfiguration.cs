@@ -11,10 +11,12 @@ namespace ECommerceAPI.Configurations
         public static void MapCategoryEndpoints(this WebApplication app)
         {
             app.MapGet("/api/categories", CategoryEndpoints.GetCategories);
+            app.MapGet("/api/categories/{id}", CategoryEndpoints.GetCategoryById);
         }
         public static void MapBrandEndpoints(this WebApplication app)
         {
             app.MapGet("/api/brands", BrandEndpoints.GetBrands);
+            app.MapGet("/api/brands/{id}", BrandEndpoints.GetBrandById);
         }
         public static void MapReviewEndpoints(this WebApplication app)
         {
@@ -37,6 +39,5 @@ namespace ECommerceAPI.Configurations
         public static void MapPaymentEndpoints(this WebApplication app)
         {
         }
-       
     }
 }

@@ -8,11 +8,11 @@ namespace ECommerceAPI.Endpoints
         public static async Task<IResult> CreateProduct(IProductService productService, CreateProductRequestDto product)
         {
             var response = await productService.CreateProductAsync(product);
-            if (response == null)
+            if (response.IsError)
             {
                 return Results.BadRequest("Product not created");
             }
-            return Results.Created($"/api/products/{response.Id}", response);
+            return Results.Created($"/api/products/{response.Value.Id}", response.Value);
         }
     }
 }

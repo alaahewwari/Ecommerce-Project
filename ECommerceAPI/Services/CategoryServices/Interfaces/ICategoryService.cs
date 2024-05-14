@@ -1,12 +1,11 @@
-﻿using ECommerceAPI.Data.Models;
-using ECommerceAPI.Dtos.Product.Responses;
+﻿using ECommerceAPI.Dtos.Product.Responses;
+using ErrorOr;
 
 namespace ECommerceAPI.Services.CategoryServices.Interfaces
 {
     public interface ICategoryService
     {
         Task<IEnumerable<CategoryResponseDto>> GetCategoriesAsync();
-        
-        Task<CategoryResponseDto> GetCategoryByIdAsync(long categoryId);
+        Task<ErrorOr<CategoryResponseDto>> GetCategoryByIdAsync(long categoryId);
     }
 }

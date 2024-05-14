@@ -7,14 +7,18 @@ namespace ECommerceAPI.Endpoints
     {
         public static async Task<IResult> GetBrands(IBrandService brandService)
         {
-            var categories = await brandService.GetBrandsAsync();
-            if (categories.IsNullOrEmpty())
-            {
-                return Results.NotFound("No categories found");
-            }
-            return Results.Ok(categories);
+            var brands = await brandService.GetBrandsAsync();
+            return Results.Ok(brands);
         }
-
+        public static async Task<IResult> GetBrandById(IBrandService brandService, int id)
+        {
+            var brand = await brandService.GetBrandByIdAsync(id);
+            if (brand.IsError)
+            {
+                return Results.NotFound(brand.Errors);
+            }
+            return Results.Ok(brand.Value);
+        }
 
     }
 }
