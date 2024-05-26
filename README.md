@@ -1,6 +1,5 @@
 # Ecommerce-Project
 
-# E-Commerce Website Project
 
 This repository contains the source code for an e-commerce website developed as an internship project at Asal Technologies. The website is built using .NET Core and C#, designed to provide a robust online shopping platform both for customers and administrators.
 
