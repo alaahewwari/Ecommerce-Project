@@ -1,7 +1,6 @@
 ﻿using ECommerceAPI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using System.Reflection.Emit;
 
 namespace ECommerceAPI.Data
 {
@@ -38,15 +37,18 @@ namespace ECommerceAPI.Data
            .ToTable("Customers");
 
             SeedRoles(modelBuilder);
+            SeedBrands(modelBuilder);
+            SeedCategories(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
+
         private static void SeedRoles(ModelBuilder builder)
         {
             builder.Entity<Role>().HasData(
                   new Role
                   {
                       Id = 1,
-                      Name = "Admin "
+                      Name = "Admin"
                   },
                   new Role
                   {
@@ -55,7 +57,47 @@ namespace ECommerceAPI.Data
                   }
             );
         }
+        private static void SeedCategories(ModelBuilder builder)
+        {
+            builder.Entity<Category>().HasData(
+                    new Category
+                    {
+                        Id = 1,
+                        Name = "Electronics"
+                    },
+                    new Category
+                    {
+                        Id = 2,
+                        Name = "Clothing"
+                    },
+                    new Category
+                    {
+                        Id = 3,
+                        Name = "Books"
+                    }
+         );
+        }
+        private static void SeedBrands(ModelBuilder builder)
+        {
+            builder.Entity<Brand>().HasData(
+                   new Brand
+                   {
+                       Id = 1,
+                       Name = "Apple"
+                   },
+                   new Brand
+                   {
+                       Id = 2,
+                       Name = "Samsung"
+                   },
+                   new Brand
+                   {
+                       Id = 3,
+                       Name = "Nike"
+                   }
+                );
+        }
 
     }
-   
+
 }

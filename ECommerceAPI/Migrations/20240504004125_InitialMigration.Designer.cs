@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240426160043_SeedTwoRoles")]
-    partial class SeedTwoRoles
+    [Migration("20240504004125_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,6 +89,23 @@ namespace ECommerceAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Brands");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Name = "Apple"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Name = "Samsung"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Name = "Nike"
+                        });
                 });
 
             modelBuilder.Entity("ECommerceAPI.Data.Models.Cart", b =>
@@ -121,9 +138,6 @@ namespace ECommerceAPI.Migrations
                     b.Property<long>("CartId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("CustomerId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint");
 
@@ -133,8 +147,6 @@ namespace ECommerceAPI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("ProductId");
 
@@ -157,6 +169,23 @@ namespace ECommerceAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Name = "Electronics"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Name = "Clothing"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Name = "Books"
+                        });
                 });
 
             modelBuilder.Entity("ECommerceAPI.Data.Models.CategoryAttribute", b =>
@@ -403,7 +432,7 @@ namespace ECommerceAPI.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("CreatedUserId")
+                    b.Property<long?>("CreatedUserId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("CurrencyId")
@@ -422,17 +451,17 @@ namespace ECommerceAPI.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("SalePrice")
+                    b.Property<decimal?>("SalePrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("StockQuantity")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedUserId")
+                    b.Property<long?>("UpdatedUserId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -509,7 +538,7 @@ namespace ECommerceAPI.Migrations
                         new
                         {
                             Id = 1L,
-                            Name = "Admin "
+                            Name = "Admin"
                         },
                         new
                         {
@@ -580,10 +609,9 @@ namespace ECommerceAPI.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("ProfileImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("RoleId")
+                    b.Property<long?>("RoleId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -648,12 +676,6 @@ namespace ECommerceAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ECommerceAPI.Data.Models.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ECommerceAPI.Data.Models.Product", "Product")
                         .WithMany("CartItems")
                         .HasForeignKey("ProductId")
@@ -661,8 +683,6 @@ namespace ECommerceAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Cart");
-
-                    b.Navigation("Customer");
 
                     b.Navigation("Product");
                 });
@@ -759,8 +779,7 @@ namespace ECommerceAPI.Migrations
                     b.HasOne("ECommerceAPI.Data.Models.User", "CreatedUser")
                         .WithMany("CreatedProducts")
                         .HasForeignKey("CreatedUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ECommerceAPI.Data.Models.Currency", null)
                         .WithMany("Products")
@@ -769,8 +788,7 @@ namespace ECommerceAPI.Migrations
                     b.HasOne("ECommerceAPI.Data.Models.User", "UpdatedUser")
                         .WithMany("UpdatedProducts")
                         .HasForeignKey("UpdatedUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Brand");
 
@@ -823,9 +841,7 @@ namespace ECommerceAPI.Migrations
                 {
                     b.HasOne("ECommerceAPI.Data.Models.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.Navigation("Role");
                 });
