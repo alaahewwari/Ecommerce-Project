@@ -1,6 +1,4 @@
-﻿
-
-using AutoFixture;
+﻿using AutoFixture;
 using ECommerceAPI.Dtos.Category.Requests;
 using ECommerceAPI.Dtos.Product.Responses;
 using ECommerceAPI.Endpoints;
@@ -11,7 +9,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
 
-namespace ECommerceAPI.Tests.Endpoints
+namespace ECommerceAPI.Tests.EndpointsTests
 {
         public class CategoryEndpointsTests
         {
@@ -23,15 +21,15 @@ namespace ECommerceAPI.Tests.Endpoints
                 _fixture = new Fixture();
             }
         [Fact]
-            public async Task GetCategories_ShouldReturnOkResult_WithListOfCategories()
+            public async Task GetCategories_ShouldReturnSuccessResponse_WithListOfCategories()
             {
-                var categories = _fixture.CreateMany<CategoryResponseDto>(10).ToList();
-                _mockCategoryService.Setup(service => service.GetCategoriesAsync()).ReturnsAsync(categories);
+                var expected = _fixture.CreateMany<CategoryResponseDto>(10).ToList();
+                _mockCategoryService.Setup(service => service.GetCategoriesAsync()).ReturnsAsync(expected);
 
                 var result = await CategoryEndpoints.GetCategories(_mockCategoryService.Object);
 
-                var okResult = result.Should().BeOfType<Ok<IEnumerable<CategoryResponseDto>>>().Subject;
-                okResult.Value.Should().BeEquivalentTo(categories);
+                var actual = result.Should().BeOfType<Ok<IEnumerable<CategoryResponseDto>>>().Subject;
+                actual.Value.Should().BeEquivalentTo(expected);
             }
 
             [Fact]
@@ -47,7 +45,7 @@ namespace ECommerceAPI.Tests.Endpoints
             }
 
             [Fact]
-            public async Task GetCategoryById_ShouldReturnOkResult_WhenCategoryFound()
+            public async Task GetCategoryById_ShouldReturnSuccessResponse_WhenCategoryFound()
             {
                 var category = _fixture.Create<CategoryResponseDto>();
                 ErrorOr<CategoryResponseDto> success = category;
@@ -60,32 +58,32 @@ namespace ECommerceAPI.Tests.Endpoints
             }
 
             [Fact]
-            public async Task CreateCategory_ShouldReturnBadRequest_WhenCategoryNotCreated()
-            {
-                var createCategoryRequest = _fixture.Create<CreateCategoryRequestDto>();
-                var error = CategoryErrors.CategoryCreationFailed;
-                _mockCategoryService.Setup(service => service.CreateCategoryAsync(createCategoryRequest)).ReturnsAsync(error);
-
-                var result = await CategoryEndpoints.CreateCategory(_mockCategoryService.Object, createCategoryRequest);
-
-                var badRequestResult = result.Should().BeOfType<BadRequest<string>>().Subject;
-                badRequestResult.Value.Should().Be("Category not created");
-            }
-
-            [Fact]
             public async Task CreateCategory_ShouldReturnCreatedResult_WithCategory()
             {
-                var createCategoryRequest = _fixture.Create<CreateCategoryRequestDto>();
-                var category = _fixture.Create<CategoryResponseDto>();
+                var createCategoryRequest = _fixture.Create<CategoryRequestDto>();
+                var expected = _fixture.Create<CategoryResponseDto>();
+                ErrorOr<CategoryResponseDto> success = expected;
 
-                ErrorOr<CategoryResponseDto> success = category;
                 _mockCategoryService.Setup(service => service.CreateCategoryAsync(createCategoryRequest)).ReturnsAsync(success);
 
                 var result = await CategoryEndpoints.CreateCategory(_mockCategoryService.Object, createCategoryRequest);
 
-                var createdResult = result.Should().BeOfType<Created<CategoryResponseDto>>().Subject;
-                createdResult.Location.Should().Be($"/api/categories/{category.Id}");
-                createdResult.Value.Should().BeEquivalentTo(category);
+                var actual = result.Should().BeOfType<Created<CategoryResponseDto>>().Subject;
+                actual.Location.Should().Be($"/api/categories/{expected.Id}");
+                actual.Value.Should().BeEquivalentTo(expected);
+            }
+
+        [Fact]
+            public async Task CreateCategory_ShouldReturnBadRequest_WhenCategoryNotCreated()
+            {
+                var categoryRequestDto = _fixture.Create<CategoryRequestDto>();
+            var expected = CategoryErrors.CategoryCreationFailed;
+                _mockCategoryService.Setup(service => service.CreateCategoryAsync(categoryRequestDto)).ReturnsAsync(expected);
+
+                var result = await CategoryEndpoints.CreateCategory(_mockCategoryService.Object, categoryRequestDto);
+
+                var actual = result.Should().BeOfType<BadRequest<List<Error>>>().Subject;
+                actual.Value.Should().Contain(expected);
             }
         }
     
