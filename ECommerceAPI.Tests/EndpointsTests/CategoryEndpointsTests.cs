@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using ECommerceAPI.Common;
 using ECommerceAPI.Dtos.Category.Requests;
 using ECommerceAPI.Dtos.Product.Responses;
 using ECommerceAPI.Endpoints;
@@ -58,7 +59,7 @@ namespace ECommerceAPI.Tests.EndpointsTests
             }
 
             [Fact]
-            public async Task CreateCategory_ShouldReturnCreatedResult_WithCategory()
+            public async Task CreateCategory_ShouldReturnSuccessResponse_WithCategory()
             {
                 var createCategoryRequest = _fixture.Create<CategoryRequestDto>();
                 var expected = _fixture.Create<CategoryResponseDto>();
@@ -85,6 +86,62 @@ namespace ECommerceAPI.Tests.EndpointsTests
                 var actual = result.Should().BeOfType<BadRequest<List<Error>>>().Subject;
                 actual.Value.Should().Contain(expected);
             }
+
+        [Fact]
+        public async Task UpdateCategory_ShouldReturnSuccessResponse_WithUpdatedCategory()
+        {
+            var categoryId = _fixture.Create<long>();
+            var categoryRequestDto = _fixture.Create<CategoryRequestDto>();
+            var categoryResponseDto = _fixture.Create<CategoryResponseDto>();
+            ErrorOr<CategoryResponseDto> success = categoryResponseDto;
+
+            _mockCategoryService.Setup(service => service.UpdateCategoryAsync(categoryId, categoryRequestDto)).ReturnsAsync(success);
+
+            var result = await CategoryEndpoints.UpdateCategory(_mockCategoryService.Object, categoryId, categoryRequestDto);
+
+            var actual = result.Should().BeOfType<Ok<CategoryResponseDto>>().Subject;
+            actual.Value.Should().BeEquivalentTo(categoryResponseDto);
+        }
+        [Fact]
+        public async Task UpdateCategory_ShouldReturnBadRequest_WhenCategoryNotUpdated()
+        {
+            var categoryId = _fixture.Create<long>();
+            var categoryRequestDto = _fixture.Create<CategoryRequestDto>();
+            var expected = CategoryErrors.CategoryUpdateFailed;
+            _mockCategoryService.Setup(service => service.UpdateCategoryAsync(categoryId, categoryRequestDto)).ReturnsAsync(expected);
+
+            var result = await CategoryEndpoints.UpdateCategory(_mockCategoryService.Object, categoryId, categoryRequestDto);
+            var actual = result.Should().BeOfType<BadRequest<List<Error>>>().Subject;
+            actual.Value.Should().Contain(expected);
+        }
+        [Fact]
+        public async Task DeleteCategory_ShouldReturnSuccessResponse_WhenCategoryDeleted()
+        {
+            var categoryId = _fixture.Create<long>();
+            var expected = new SuccessResponse("Category deleted successfully");
+            ErrorOr<SuccessResponse> success = expected;
+            _mockCategoryService.Setup(service => service.DeleteCategoryAsync(categoryId)).ReturnsAsync(success);
+
+            var result = await CategoryEndpoints.DeleteCategory(_mockCategoryService.Object, categoryId);
+
+            var actual = result.Should().BeOfType<Ok<SuccessResponse>>().Subject;
+            actual.Value.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task DeleteCategory_ShouldReturnBadRequest_WhenCategoryDeletionFailed()
+        {
+            var categoryId = _fixture.Create<long>();
+            var expected = CategoryErrors.CategoryDeletionFailed;
+            _mockCategoryService.Setup(service => service.DeleteCategoryAsync(categoryId)).ReturnsAsync(expected);
+
+            var result = await CategoryEndpoints.DeleteCategory(_mockCategoryService.Object, categoryId);
+
+            var actual = result.Should().BeOfType<BadRequest<List<Error>>>().Subject;
+            actual.Value.Should().Contain(expected);
+        }
+
+        
         }
     
 }
