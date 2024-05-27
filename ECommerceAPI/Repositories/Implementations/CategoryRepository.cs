@@ -10,17 +10,50 @@ namespace ECommerceAPI.Repositories.Implementations
         )
         : ICategoryRepository
     {
-
+        public async Task<Category?> CreateCategoryAsync(Category? category)
+        {
+            await context.Categories.AddAsync(category);
+            await context.SaveChangesAsync();
+            return category;
+        }
+        public async Task<Category?> UpdateCategoryAsync(Category updatedCategory, long categoryId)
+        {
+            var category = await GetCategoryByIdAsync(categoryId);
+            category.Name = updatedCategory.Name;
+            context.Categories.Update(category);
+            await context.SaveChangesAsync();
+            return category;
+        }
         public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
-            return await context.Categories.ToListAsync();
+            var categories = await context.Categories.AsNoTracking().ToListAsync();
+            return categories;
         }
-        public async Task<Category?> GetCategoryByIdAsync(long CategoryId)
+        public async Task<Category?> GetCategoryByIdAsync(long categoryId)
         {
             var category = await context.Categories
-                .Where(c => c.Id == CategoryId)
+                .AsNoTracking()
+                .Where(b => b.Id == categoryId)
                 .FirstOrDefaultAsync();
             return category;
+        }
+        public async Task<Category?> GetCategoryByNameAsync(string categoryName)
+        {
+            var category = await context.Categories
+                .Where(b => b.Name == categoryName)
+                .FirstOrDefaultAsync();
+            return category;
+        }
+        public async Task<bool> DeleteCategoryAsync(long categoryId)
+        {
+            var category = await GetCategoryByIdAsync(categoryId);
+            if (category is null)
+            {
+                return false;
+            }
+            context.Categories.Remove(category);
+            await context.SaveChangesAsync();
+            return true;
         }
     }
 }
