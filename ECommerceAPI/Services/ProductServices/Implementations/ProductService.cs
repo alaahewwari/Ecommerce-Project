@@ -1,48 +1,103 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
+using ECommerceAPI.Common;
 using ECommerceAPI.Data.Models;
 using ECommerceAPI.Dtos.Product.Requests;
 using ECommerceAPI.Dtos.Product.Responses;
 using ECommerceAPI.ErrorHandling;
 using ECommerceAPI.Repositories.Interfaces;
-using ECommerceAPI.Services.BrandServices.Interfaces;
-using ECommerceAPI.Services.CategoryServices.Interfaces;
 using ECommerceAPI.Services.ProductServices.Interfaces;
 using ErrorOr;
-using Microsoft.Extensions.Localization;
 
-namespace ECommerceAPI.Services.ProductService.Implementations
+namespace ECommerceAPI.Services.ProductServices.Implementations
 {
     public class ProductService(
         IMapper mapper,
         IProductRepository productRepository,
-        IBrandService brandService,
-        ICategoryService categoryService
+        IBrandRepository brandRepository,
+        ICategoryRepository categoryRepository
         ) : IProductService
     {
-        public async Task<ErrorOr<CreateProductResponseDto>> CreateProductAsync(CreateProductRequestDto productDto)
+        public async Task<ErrorOr<ProductResponseDto>> CreateProductAsync(ProductRequestDto productDto)
         {
-                var brand = await brandService.GetBrandByIdAsync(productDto.BrandId);
-                if (brand.IsError)
+                var brand = await brandRepository.GetBrandByIdAsync(productDto.BrandId);
+                if (brand is null)
                 {
                     return BrandErrors.BrandNotFound;
                 }
-                var category = await categoryService.GetCategoryByIdAsync(productDto.CategoryId);
-                if (category.IsError)
+                var category = await categoryRepository.GetCategoryByIdAsync(productDto.CategoryId);
+                if (category is null)
                 {
                     return CategoryErrors.CategoryNotFound;
                 }
                 var product = mapper.Map<Product>(productDto);
-
-                var result = await productRepository.CreateProductAsync(product);
+            product.CreatedDate = DateTime.Now;
+            var result = await productRepository.CreateProductAsync(product);
                 if (result is null)
-            {
-                return ProductErrors.ProductCreationFailed;
+                {
+                    return ProductErrors.ProductCreationFailed;
                 }
-
-                var response = mapper.Map<CreateProductResponseDto>(result);
-
-                return response;
+                var response =await GetProductByIdAsync(result.Id);
+            return response;
         }
+        public async Task<ErrorOr<ProductResponseDto>> UpdateProductAsync(ProductRequestDto productDto, long id)
+        {
+            var product = await productRepository.GetProductByIdAsync(id);
+            if (product is null)
+            {
+                return ProductErrors.ProductNotFound;
+            }
+            var brand = await brandRepository.GetBrandByIdAsync(productDto.BrandId);
+            if (brand is null)
+            {
+                return BrandErrors.BrandNotFound;
+            }
+            var category = await categoryRepository.GetCategoryByIdAsync(productDto.CategoryId);
 
-    }
+            if (category is null)
+            {
+                return CategoryErrors.CategoryNotFound;
+            }
+
+            var updatedProduct = mapper.Map<Product>(productDto);
+            updatedProduct.Id = id;
+            var result = await productRepository.UpdateProductAsync(updatedProduct);
+var response = mapper.Map<ProductResponseDto>(result);
+            if (response is null)
+            {
+                return ProductErrors.ProductUpdateFailed;
+            }
+            return response;
+        }
+        public async Task<ErrorOr<ProductResponseDto>> GetProductByIdAsync(long id)
+        {
+var product = await productRepository.GetProductByIdAsync(id);
+            if (product is null)
+            {
+                return ProductErrors.ProductNotFound;
+            }
+            var response = mapper.Map<ProductResponseDto>(product);
+            return response;
+        }
+        public async Task<ErrorOr<IList<ProductResponseDto>>> GetProductsAsync()
+        {
+            var products = await productRepository.GetProductsAsync();
+            var response = mapper.Map<IList<ProductResponseDto>>(products);
+            return response.ToList();
+        }
+        public async Task<ErrorOr<SuccessResponse>> DeleteProductAsync(long id)
+        {
+            var product = await productRepository.GetProductByIdAsync(id);
+            if (product is null)
+            {
+                return ProductErrors.ProductNotFound;
+            }
+            var result = await productRepository.DeleteProductAsync(id);
+            if (!result)
+            {
+                return ProductErrors.ProductDeletionFailed;
+            }
+            return new SuccessResponse("Product deleted successfully");
+        }
+        }
 }
