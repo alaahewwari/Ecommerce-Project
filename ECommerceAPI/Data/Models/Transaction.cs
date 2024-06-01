@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Transactions;
-
+﻿using System.Transactions;
 namespace ECommerceAPI.Data.Models
 {
     public class Transaction

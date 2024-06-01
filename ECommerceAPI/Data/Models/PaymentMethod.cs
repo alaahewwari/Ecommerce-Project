@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ECommerceAPI.Data.Models
+﻿namespace ECommerceAPI.Data.Models
 {
     public class PaymentMethod
     {
