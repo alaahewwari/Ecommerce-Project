@@ -1,7 +1,4 @@
 ﻿using ECommerceAPI.Data.Enums;
-using System.ComponentModel.DataAnnotations;
-using System.Numerics;
-
 namespace ECommerceAPI.Data.Models
 {
     public class Order

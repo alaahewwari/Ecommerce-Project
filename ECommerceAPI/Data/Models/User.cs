@@ -1,8 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿using Microsoft.AspNetCore.Identity;
 namespace ECommerceAPI.Data.Models
 {
-    public class User
+    public class User : IdentityUser<long>
     {
         public long Id { get; set; }
         public string FirstName { get; set; }

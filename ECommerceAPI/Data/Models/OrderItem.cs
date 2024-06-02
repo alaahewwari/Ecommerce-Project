@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace ECommerceAPI.Data.Models
+﻿namespace ECommerceAPI.Data.Models
 {
     public class OrderItem
     {
