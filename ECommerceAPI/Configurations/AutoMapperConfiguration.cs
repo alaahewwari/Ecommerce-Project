@@ -2,7 +2,7 @@
 {
     public static class AutoMapperConfiguration
     {
-        public static void AddAutoMapperServices(this IServiceCollection services)
+        public static void AddAutoMapper(this IServiceCollection services)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }

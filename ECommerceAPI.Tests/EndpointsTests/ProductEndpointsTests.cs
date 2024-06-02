@@ -1,6 +1,4 @@
-﻿
-
-using AutoFixture;
+﻿using AutoFixture;
 using ECommerceAPI.Dtos.Product.Requests;
 using ECommerceAPI.Dtos.Product.Responses;
 using ECommerceAPI.Endpoints;
@@ -9,7 +7,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
 
-namespace ECommerceAPI.Tests.Endpoints
+namespace ECommerceAPI.Tests.EndpointsTests
 {
     public class ProductEndpointsTests
     {
@@ -23,19 +21,16 @@ namespace ECommerceAPI.Tests.Endpoints
         }
 
         [Fact]
-        public async Task CreateProductAsync_ShouldReturnCreatedResult_WithProduct()
+        public async Task CreateProductAsync_ShouldReturnSuccessResponse_WithProduct()
         {
-            //Arrange 
-            var product = _fixture.Create<CreateProductResponseDto>();
-            _mockProductService.Setup(service => service.CreateProductAsync(It.IsAny<CreateProductRequestDto>())).ReturnsAsync(product);
+            var expected = _fixture.Create<ProductResponseDto>();
+            _mockProductService.Setup(service => service.CreateProductAsync(It.IsAny<ProductRequestDto>())).ReturnsAsync(expected);
 
-            //Act
-            var result = await ProductEndpoints.CreateProduct(_mockProductService.Object, _fixture.Create<CreateProductRequestDto>());
+            var result = await ProductEndpoints.CreateProduct(_mockProductService.Object, _fixture.Create<ProductRequestDto>());
             
-            //Assert 
-            var createdResult = result.Should().BeOfType<Created<CreateProductResponseDto>>().Subject;
-            createdResult.Location.Should().Be($"/api/products/{product.Id}");
-            createdResult.Value.Should().BeEquivalentTo(product);
+            var actual = result.Should().BeOfType<Created<ProductResponseDto>>().Subject;
+            actual.Location.Should().Be($"/api/products/{expected.Id}");
+            actual.Value.Should().BeEquivalentTo(expected);
         }
     }
 }

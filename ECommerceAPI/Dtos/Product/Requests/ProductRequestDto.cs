@@ -1,6 +1,6 @@
 ﻿namespace ECommerceAPI.Dtos.Product.Requests
 {
-    public record CreateProductRequestDto
+    public record ProductRequestDto
     {
         public string Name { get; set; }
         public decimal Price { get; set; }
