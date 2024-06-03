@@ -4,6 +4,11 @@ namespace ECommerceAPI.Configurations
 {
     public static class EndpointsConfiguration 
     {
+        public static void MapAuthenticationEndpoints(this WebApplication app)
+        {
+            app.MapPost("/api/auth/registration", AuthenticationEndpoints.Register);
+        app.MapGet("/api/auth/email-confirmation", AuthenticationEndpoints.ConfirmEmail);
+        }
         public static void MapProductEndpoints(this WebApplication app)
         {
             app.MapPost("/api/products", ProductEndpoints.CreateProduct);
