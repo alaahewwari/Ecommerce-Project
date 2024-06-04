@@ -9,7 +9,6 @@ namespace ECommerceAPI.Services.UrlBuilder.Implementations
         {
             return $"{configuration["ApiSettings:AuthBaseUrl"]}/register";
         }
-
         public string GetEmailConfirmationUrl()
         {
             return $"{configuration["ApiSettings:AuthBaseUrl"]}/email-confirmation";

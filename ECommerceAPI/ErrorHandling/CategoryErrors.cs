@@ -15,7 +15,9 @@ namespace ECommerceAPI.ErrorHandling
         public static readonly Error CategoryInvalid = Error.Validation(
                        code: "CategoryInvalid",
                        description: "The provided category data is invalid.");
-
+        public static readonly Error CategoryCreationFailed = Error.Failure(
+                                  code: "CategoryCreationFailed",
+                                  description: "Failed to create the category.");
         public static readonly Error CategoryUpdateFailed = Error.Failure(
                        code: "CategoryUpdateFailed",
                        description: "Failed to update the category.");

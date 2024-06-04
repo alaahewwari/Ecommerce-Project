@@ -1,5 +1,7 @@
 ﻿using ECommerceAPI.Repositories.Implementations;
 using ECommerceAPI.Repositories.Interfaces;
+using ECommerceAPI.Services.AuthenticationServices.Implementations;
+using ECommerceAPI.Services.AuthenticationServices.Interfaces;
 using ECommerceAPI.Services.BrandServices.Implementations;
 using ECommerceAPI.Services.BrandServices.Interfaces;
 using ECommerceAPI.Services.CartServices.Implementations;
@@ -8,6 +10,8 @@ using ECommerceAPI.Services.CategoryServices.Implementations;
 using ECommerceAPI.Services.CategoryServices.Interfaces;
 using ECommerceAPI.Services.CustomerServices.Implementations;
 using ECommerceAPI.Services.CustomerServices.Interfaces;
+using ECommerceAPI.Services.EmailServices.Implementations;
+using ECommerceAPI.Services.EmailServices.Interfaces;
 using ECommerceAPI.Services.IdentityServices.Implementations;
 using ECommerceAPI.Services.IdentityServices.Interfaces;
 using ECommerceAPI.Services.OrderServices.Implementations;
@@ -20,10 +24,10 @@ using ECommerceAPI.Services.ReviewServices.Implementations;
 using ECommerceAPI.Services.ReviewServices.Interfaces;
 using ECommerceAPI.Services.RoleServices.Implementations;
 using ECommerceAPI.Services.RoleServices.Interfaces;
+using ECommerceAPI.Services.UrlBuilder.Implementations;
+using ECommerceAPI.Services.UrlBuilder.Interfaces;
 using ECommerceAPI.Services.UserServices.Implementations;
 using ECommerceAPI.Services.UserServices.Interfaces;
-using Microsoft.AspNetCore.Authentication;
-
 namespace ECommerceAPI.Configurations
 {
     public static class ApplicationServicesConfiguration
@@ -31,6 +35,8 @@ namespace ECommerceAPI.Configurations
         public static void ConfigureBusinessServices(this IServiceCollection services)
         {
 services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IUrlBuilder, UrlBuilder>();
+            services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<ICategoryService, CategoryService>();
@@ -42,7 +48,6 @@ services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<ICustomerService, CustomerService>();
-
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IBrandRepository, BrandRepository>();

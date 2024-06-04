@@ -10,7 +10,6 @@
                 {
                     c.SwaggerDoc("v1", new() { Title = "ECommerceAPI", Version = "v1" });
                 });
-
         }
     }
 }

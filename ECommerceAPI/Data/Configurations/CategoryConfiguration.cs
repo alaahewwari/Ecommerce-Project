@@ -1,7 +1,6 @@
 ﻿using ECommerceAPI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 namespace ECommerceAPI.Data.Configurations
 {
     public class CategoryConfiguration : IEntityTypeConfiguration<Category>
@@ -11,8 +10,6 @@ namespace ECommerceAPI.Data.Configurations
             builder
                 .Property(b => b.Name)
                 .HasMaxLength(255);
-
-
         }
     }
 }

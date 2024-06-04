@@ -1,6 +1,4 @@
-﻿using ErrorOr;
-
-namespace ECommerceAPI.Common
+﻿namespace ECommerceAPI.Common
 {
     public class SuccessResponse(string successMessage)
     {

@@ -11,8 +11,6 @@ namespace ECommerceAPI.Data.Configurations
             builder
                 .Property(b => b.Name)
                 .HasMaxLength(255);
-
-            
         }
     }
 }

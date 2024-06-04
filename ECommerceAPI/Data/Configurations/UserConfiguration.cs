@@ -1,7 +1,6 @@
 ﻿using ECommerceAPI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 namespace ECommerceAPI.Data.Configurations
 {
     public class UserConfiguration : IEntityTypeConfiguration<User>
@@ -13,8 +12,6 @@ namespace ECommerceAPI.Data.Configurations
             builder.Property(u => u.LastName)
                 .HasMaxLength(50);
             builder.Property(u => u.Email)
-                .HasMaxLength(255);
-            builder.Property(u => u.Password)
                 .HasMaxLength(255);
         }
     }

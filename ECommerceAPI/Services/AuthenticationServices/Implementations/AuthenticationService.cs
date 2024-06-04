@@ -19,7 +19,7 @@ namespace ECommerceAPI.Services.AuthenticationServices.Implementations
     { 
         public async Task<ErrorOr<SuccessResponse>> RegisterAsync(RegistrationRequestDto request)
         {
-var userExists = await identityService.FindByEmailAsync(request.Email);
+            var userExists = await identityService.FindByEmailAsync(request.Email);
             if (userExists is not null)
             {
                 return IdentityErrors.UserAlreadyExists;
@@ -37,7 +37,6 @@ var userExists = await identityService.FindByEmailAsync(request.Email);
                 return IdentityErrors.UserCreationFailed;
             }
             var baseUrl = urlBuilder.GetEmailConfirmationUrl();
-
             var token = await GenerateAndSendEmailConfirmationEmailAsync(applicationUser,baseUrl);
             if (token.IsNullOrEmpty())
             {
