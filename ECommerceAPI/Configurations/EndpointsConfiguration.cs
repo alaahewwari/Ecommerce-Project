@@ -1,5 +1,4 @@
 ﻿using ECommerceAPI.Endpoints;
-
 namespace ECommerceAPI.Configurations
 {
     public static class EndpointsConfiguration 
@@ -7,7 +6,7 @@ namespace ECommerceAPI.Configurations
         public static void MapAuthenticationEndpoints(this WebApplication app)
         {
             app.MapPost("/api/auth/registration", AuthenticationEndpoints.Register);
-        app.MapGet("/api/auth/email-confirmation", AuthenticationEndpoints.ConfirmEmail);
+            app.MapGet("/api/auth/email-confirmation", AuthenticationEndpoints.ConfirmEmail);
         }
         public static void MapProductEndpoints(this WebApplication app)
         {
