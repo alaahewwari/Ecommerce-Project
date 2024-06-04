@@ -1,15 +1,12 @@
-﻿using ECommerceAPI.Constants.Email;
-using ECommerceAPI.Dtos.Authentication.Requests;
+﻿using ECommerceAPI.Dtos.Authentication.Requests;
 using ECommerceAPI.Services.AuthenticationServices.Interfaces;
-
 namespace ECommerceAPI.Endpoints
 {
-    public class AuthenticationEndpoints 
+    public class AuthenticationEndpoints
     {
         public static async Task<IResult> Register(IAuthenticationService authenticationService, RegistrationRequestDto registerRequest)
         {
-            var baseUrl = "https://localhost:7131/api/auth/email-confirmation";
-            var response = await authenticationService.RegisterAsync(registerRequest,baseUrl);
+            var response = await authenticationService.RegisterAsync(registerRequest);
             if (response.IsError)
             {
                 return Results.BadRequest(response.Errors);
@@ -25,6 +22,5 @@ namespace ECommerceAPI.Endpoints
             }
             return Results.Ok(response.Value);
         }
-
     }
 }
