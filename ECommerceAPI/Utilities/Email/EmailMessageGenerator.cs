@@ -1,5 +1,4 @@
-﻿using ECommerceAPI.Constants.Email;
-using MimeKit;
+﻿using MimeKit;
 namespace ECommerceAPI.Utilities.Email
 {
     public static class EmailMessageGenerator
@@ -8,11 +7,10 @@ namespace ECommerceAPI.Utilities.Email
         {
             var builder = new BodyBuilder();
             // Read the template from the file
-            string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "HtmlEmailTemplates", "EmailConfirmationTemplate.html");
+            string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "HTML", "EmailConfirmationTemplate.html");
             string emailTemplate = File.ReadAllText(templatePath);
             // Replace placeholders with actual values
-            string messageBody = emailTemplate.Replace("{Url}", url)
-                .Replace("{ImageUrl}", EmailUrlConstants.ConfirmationImageUrl);
+            string messageBody = emailTemplate.Replace("{Url}", url);
             builder.HtmlBody = messageBody;
             return builder.ToMessageBody();
         }
