@@ -1,8 +1,6 @@
 ﻿using ECommerceAPI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
-
 namespace ECommerceAPI.Data.Configurations
 {
     public class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
@@ -14,7 +12,6 @@ namespace ECommerceAPI.Data.Configurations
                 .WithMany(p => p.CartItems)
                 .HasForeignKey(ci => ci.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
-
             builder
                 .HasOne(ci => ci.Cart)
                 .WithMany(c => c.CartItems)

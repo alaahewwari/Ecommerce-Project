@@ -1,7 +1,4 @@
-﻿using ECommerceAPI.Data;
-using Microsoft.EntityFrameworkCore;
-
-namespace ECommerceAPI.Configurations
+﻿namespace ECommerceAPI.Configurations
 {
     public static class ApplicationSetup
     {
@@ -13,6 +10,7 @@ namespace ECommerceAPI.Configurations
             services.AddAutoMapper();
             services.AddAuthentication(configuration);
             services.ConfigureBusinessServices();
+            services.AddEmailServices(configuration);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿
-using ErrorOr;
-
+﻿using ErrorOr;
 namespace ECommerceAPI.ErrorHandling
 {
     public static class BrandErrors
@@ -16,11 +14,12 @@ namespace ECommerceAPI.ErrorHandling
         public static readonly Error BrandInvalid = Error.Validation(
             code: "BrandInvalid",
             description: "The provided brand data is invalid.");
-
+        public static readonly Error BrandCreationFailed = Error.Failure(
+                       code: "BrandCreationFailed",
+                       description: "Failed to create the brand.");
         public static readonly Error BrandUpdateFailed = Error.Failure(
             code: "BrandUpdateFailed",
             description: "Failed to update the brand.");
-
         public static readonly Error BrandDeletionFailed = Error.Failure(
             code: "BrandDeletionFailed",
             description: "Failed to delete the brand.");

@@ -8,7 +8,6 @@ namespace ECommerceAPI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
-           
             builder
                 .Property(pn => pn.PhoneNumber)
                 .HasMaxLength(25);

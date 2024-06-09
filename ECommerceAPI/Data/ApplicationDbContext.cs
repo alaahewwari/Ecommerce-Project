@@ -1,17 +1,13 @@
 ﻿using ECommerceAPI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace ECommerceAPI.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : IdentityDbContext<User,Role,long>(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Brand> Brands { get; set; }
@@ -28,20 +24,15 @@ namespace ECommerceAPI.Data
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Customer>()
-           .ToTable("Customers");
-
+            modelBuilder.Entity<Customer>().ToTable("Customers");
             SeedRoles(modelBuilder);
             SeedBrands(modelBuilder);
             SeedCategories(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
-
         private static void SeedRoles(ModelBuilder builder)
         {
             builder.Entity<Role>().HasData(
@@ -97,7 +88,5 @@ namespace ECommerceAPI.Data
                    }
                 );
         }
-
     }
-
 }
