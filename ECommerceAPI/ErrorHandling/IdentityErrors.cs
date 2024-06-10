@@ -15,5 +15,11 @@ namespace ECommerceAPI.ErrorHandling
         public static readonly Error UserCreationFailed = Error.Failure(
             code: "UserCreationFailed",
             description: "Failed to create the user.");
+        public static readonly Error EmailNotConfirmed = Error.Unauthorized(
+                       code: "EmailNotConfirmed",
+                                  description: "Email not confirmed.");
+        public static readonly Error InvalidCredentials = Error.Unauthorized(
+                       code: "InvalidCredentials",
+                                  description: "Invalid credentials.");
     }
 }
