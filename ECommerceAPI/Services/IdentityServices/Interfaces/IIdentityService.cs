@@ -16,5 +16,7 @@ namespace ECommerceAPI.Services.IdentityServices.Interfaces
         Task<bool> RoleExistsAsync(string role);
          Task<string> GenerateEmailConfirmationTokenAsync(User user);
     Task<bool> ConfirmEmailAsync(User user, string token);
+    Task<bool> IsEmailConfirmedAsync(User user); 
+        Task UpdateAsync(User user);
     }
 }
