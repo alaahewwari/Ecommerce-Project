@@ -7,12 +7,14 @@ namespace ECommerceAPI.Configurations
         {
             app.MapPost("/api/auth/registration", AuthenticationEndpoints.Register);
             app.MapGet("/api/auth/email-confirmation", AuthenticationEndpoints.ConfirmEmail);
+            app.MapPost("/api/auth/login", AuthenticationEndpoints.Login);
+            app.MapPost("/api/auth/refresh-token", AuthenticationEndpoints.RefreshToken);
         }
         public static void MapProductEndpoints(this WebApplication app)
         {
             app.MapPost("/api/products", ProductEndpoints.CreateProduct);
             app.MapGet("/api/products", ProductEndpoints.GetProducts);
-            app.MapGet("/api/products/{id}", ProductEndpoints.GetProductById);
+                app.MapGet("/api/products/{id}", ProductEndpoints.GetProductById);
             app.MapPut("/api/products/{id}", ProductEndpoints.UpdateProduct);
         app.MapDelete("/api/products/{id}", ProductEndpoints.DeleteProduct);
         }

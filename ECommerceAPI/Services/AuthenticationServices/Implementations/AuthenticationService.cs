@@ -1,10 +1,14 @@
-﻿using ECommerceAPI.Common;
+﻿using System.Security.Claims;
+using ECommerceAPI.Common;
 using ECommerceAPI.Data.Models;
 using ECommerceAPI.Dtos.Authentication.Requests;
+using ECommerceAPI.Dtos.Authentication.Responses;
 using ECommerceAPI.ErrorHandling;
+using ECommerceAPI.Repositories.Interfaces;
 using ECommerceAPI.Services.AuthenticationServices.Interfaces;
 using ECommerceAPI.Services.EmailServices.Interfaces;
 using ECommerceAPI.Services.IdentityServices.Interfaces;
+using ECommerceAPI.Services.TokenService.Interfaces;
 using ECommerceAPI.Services.UrlBuilder.Interfaces;
 using ECommerceAPI.Utilities.Email;
 using ErrorOr;
@@ -14,6 +18,8 @@ namespace ECommerceAPI.Services.AuthenticationServices.Implementations
     public class AuthenticationService(
         IIdentityService identityService,
         IUrlBuilder urlBuilder,
+        ITokenService tokenService,
+        IUserRepository userRepository,
         IEmailService emailService)
         : IAuthenticationService
     { 
@@ -57,6 +63,44 @@ namespace ECommerceAPI.Services.AuthenticationServices.Implementations
                 return IdentityErrors.InvalidToken;
             }
             return new SuccessResponse("Email confirmed successfully.");
+        }
+        public async Task<ErrorOr<LoginResponseDto>> LoginAsync(LoginRequestDto request)
+        {
+            var user = await identityService.FindByEmailAsync(request.Email);
+            if (user is null)
+            {
+                return IdentityErrors.UserNotFound;
+            }
+var isConfirmed = await identityService.IsEmailConfirmedAsync(user);
+            if (!isConfirmed)
+            {
+                return IdentityErrors.EmailNotConfirmed;
+            }
+            var result = await identityService.CheckPasswordAsync(user, request.Password);
+            if (!result)
+            {
+                return IdentityErrors.InvalidCredentials;
+            } 
+            var token = await tokenService.GenerateTokenAsync(user);
+            return token;
+        }
+         public async Task<ErrorOr<LoginResponseDto>> RefreshTokenAsync(string refreshToken)
+        {
+            if (refreshToken.IsNullOrEmpty())
+            {
+                return IdentityErrors.InvalidToken;
+            }
+var user = await userRepository.FindByRefreshTokenAsync(refreshToken);
+            if (user is null)
+            {
+                return IdentityErrors.UserNotFound;
+            }
+            if (user.RefreshTokenExpiryTime < DateTime.UtcNow)
+            {
+                return IdentityErrors.InvalidToken;
+            }
+            var result =await tokenService.GenerateTokenAsync(user);
+            return result;
         }
         private async Task<string> GenerateAndSendEmailConfirmationEmailAsync(User user,string baseUrl)
         {
