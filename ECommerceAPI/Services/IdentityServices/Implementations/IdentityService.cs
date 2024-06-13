@@ -89,5 +89,14 @@ namespace ECommerceAPI.Services.IdentityServices.Implementations
             }
             return false;
         }
+        public async Task<bool> IsEmailConfirmedAsync(User user)
+        {
+            var result = await userManager.IsEmailConfirmedAsync(user);
+            return result;
+        }
+public Task UpdateAsync(User user)
+        {
+            return userManager.UpdateAsync(user);
+        }
     }
 }
