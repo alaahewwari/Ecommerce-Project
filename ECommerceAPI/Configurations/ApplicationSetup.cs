@@ -9,6 +9,7 @@
             services.AddSwagger();
             services.AddAutoMapper();
             services.AddAuthentication(configuration);
+            services.AddAuthorization();
             services.ConfigureBusinessServices();
             services.AddEmailServices(configuration);
         }

@@ -41,5 +41,23 @@ namespace ECommerceAPI.Endpoints
             }
             return Results.Ok(response.Value);
         }
+        public static async Task<IResult> ForgotPassword(IAuthenticationService authenticationService, string email)
+        {
+            var response = await authenticationService.ForgotPasswordAsync(email);
+            if (response.IsError)
+            {
+                return Results.BadRequest(response.Errors);
+            }
+            return Results.Ok(response.Value);
+        }
+        public static async Task<IResult> ResetPassword(IAuthenticationService authenticationService, ResetPasswordRequestDto resetPasswordRequest)
+        {
+            var response = await authenticationService.ResetPasswordAsync(resetPasswordRequest);
+            if (response.IsError)
+            {
+                return Results.BadRequest(response.Errors);
+            }
+            return Results.Ok(response.Value);
+        }
     }
 }

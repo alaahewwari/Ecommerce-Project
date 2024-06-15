@@ -14,9 +14,10 @@ namespace ECommerceAPI.Services.IdentityServices.Interfaces
         Task<bool> ResetPasswordAsync(User user, string token, string newPassword);
         Task<bool> ChangePasswordAsync(User user, string currentPassword, string newPassword);
         Task<bool> RoleExistsAsync(string role);
-         Task<string> GenerateEmailConfirmationTokenAsync(User user);
-    Task<bool> ConfirmEmailAsync(User user, string token);
-    Task<bool> IsEmailConfirmedAsync(User user); 
+        Task<string> GenerateEmailConfirmationTokenAsync(User user);
+        Task<string> GeneratePasswordResetTokenAsync(User user);
+        Task<bool> ConfirmEmailAsync(User user, string token);
+        Task<bool> IsEmailConfirmedAsync(User user); 
         Task UpdateAsync(User user);
     }
 }
