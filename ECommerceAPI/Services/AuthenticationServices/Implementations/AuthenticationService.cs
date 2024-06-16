@@ -13,7 +13,6 @@ using ECommerceAPI.Services.UrlBuilder.Interfaces;
 using ECommerceAPI.Utilities.Email;
 using ErrorOr;
 using Microsoft.IdentityModel.Tokens;
-using static System.Net.WebRequestMethods;
 namespace ECommerceAPI.Services.AuthenticationServices.Implementations
 {
     public class AuthenticationService(
@@ -21,6 +20,7 @@ namespace ECommerceAPI.Services.AuthenticationServices.Implementations
         IUrlBuilder urlBuilder,
         ITokenService tokenService,
         IUserRepository userRepository,
+        IAuthenticatedUserService authenticatedUserService,
         IEmailService emailService)
         : IAuthenticationService
     { 
@@ -131,6 +131,25 @@ var user = await userRepository.FindByRefreshTokenAsync(refreshToken);
                 return IdentityErrors.InvalidToken;
             }
             return new SuccessResponse("Password reset successfully.");
+        }
+        public async Task<ErrorOr<SuccessResponse>> ChangePasswordAsync(ChangePasswordRequestDto request)
+        {
+            var userId = authenticatedUserService.GetAuthenticatedUserIdAsync();
+            if (userId == 0)
+            {
+                return IdentityErrors.Unauthenticated;
+            }
+            var user = await identityService.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return IdentityErrors.UserNotFound;
+            }
+            var response = await identityService.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+            if (!response)
+            {
+                return IdentityErrors.ChangePasswordFailed;
+            }
+            return new SuccessResponse("Password changed successfully");
         }
         private async Task<string> GenerateAndSendEmailConfirmationEmailAsync(User user,string baseUrl)
         {

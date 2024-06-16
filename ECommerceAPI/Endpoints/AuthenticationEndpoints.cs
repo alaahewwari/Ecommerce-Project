@@ -1,5 +1,6 @@
 ﻿using ECommerceAPI.Dtos.Authentication.Requests;
 using ECommerceAPI.Services.AuthenticationServices.Interfaces;
+using ECommerceAPI.Services.UserServices.Interfaces;
 using System.Formats.Asn1;
 namespace ECommerceAPI.Endpoints
 {
@@ -53,6 +54,15 @@ namespace ECommerceAPI.Endpoints
         public static async Task<IResult> ResetPassword(IAuthenticationService authenticationService, ResetPasswordRequestDto resetPasswordRequest)
         {
             var response = await authenticationService.ResetPasswordAsync(resetPasswordRequest);
+            if (response.IsError)
+            {
+                return Results.BadRequest(response.Errors);
+            }
+            return Results.Ok(response.Value);
+        }
+        public static async Task<IResult> ChangePassword(IAuthenticationService authenticationService, ChangePasswordRequestDto request)
+        {
+            var response = await authenticationService.ChangePasswordAsync(request);
             if (response.IsError)
             {
                 return Results.BadRequest(response.Errors);

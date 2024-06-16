@@ -11,6 +11,7 @@ namespace ECommerceAPI.Configurations
             app.MapPost("/api/auth/refresh-token", AuthenticationEndpoints.RefreshToken);
             app.MapPost("/api/auth/forgot-password", AuthenticationEndpoints.ForgotPassword);
             app.MapPost("/api/auth/password-reset", AuthenticationEndpoints.ResetPassword);
+            app.MapPost("/api/auth/password-change", AuthenticationEndpoints.ChangePassword);
         }
         public static void MapProductEndpoints(this WebApplication app)
         {
