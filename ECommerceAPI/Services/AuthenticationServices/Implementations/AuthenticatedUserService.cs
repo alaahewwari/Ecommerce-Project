@@ -1,7 +1,4 @@
-﻿using ECommerceAPI.ErrorHandling;
-using ECommerceAPI.Services.AuthenticationServices.Interfaces;
-using ErrorOr;
-using Microsoft.IdentityModel.Tokens;
+﻿using ECommerceAPI.Services.AuthenticationServices.Interfaces;
 using System.Security.Claims;
 namespace ECommerceAPI.Services.AuthenticationServices.Implementations
 {

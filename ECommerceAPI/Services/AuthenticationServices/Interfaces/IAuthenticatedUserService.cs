@@ -1,6 +1,4 @@
-﻿using ErrorOr;
-
-namespace ECommerceAPI.Services.AuthenticationServices.Interfaces
+﻿namespace ECommerceAPI.Services.AuthenticationServices.Interfaces
 {
     public interface IAuthenticatedUserService
     {
