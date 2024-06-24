@@ -11,10 +11,10 @@ namespace ECommerceAPI.Services.AuthenticationServices.Implementations
             long userId = 0;
             if (httpContextAccessor.HttpContext != null)
             {
-                var NameIdentifier = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (NameIdentifier != null)
+                var nameIdentifier = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (nameIdentifier != null)
                 {
-                    userId = long.Parse(NameIdentifier);
+                    userId = long.Parse(nameIdentifier);
                     return userId;
                 }
             }
