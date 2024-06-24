@@ -110,7 +110,7 @@ var user = await userRepository.FindByRefreshTokenAsync(refreshToken);
             {
                 return IdentityErrors.UserNotFound;
             }
-            var baseUrl = "https://localhost:5001/reset-password";// just for testing
+            var baseUrl = Constants.ResetPasswordUrl;
             var token = await GenerateAndSendResetPsswordEmailAsync(user,baseUrl);
             if (token.IsNullOrEmpty())
             {
