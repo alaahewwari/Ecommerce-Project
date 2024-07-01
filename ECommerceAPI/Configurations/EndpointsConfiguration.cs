@@ -56,6 +56,11 @@ namespace ECommerceAPI.Configurations
         }
         public static void MapRoleEndpoints(this WebApplication app)
         {
+            app.MapPost("/api/roles", RoleEndpoints.CreateRole);
+            app.MapPut("/api/roles/{id}", RoleEndpoints.UpdateRole);
+            app.MapGet("/api/roles", RoleEndpoints.GetRoles);
+            app.MapGet("/api/roles/{id}", RoleEndpoints.GetRoleById);
+            app.MapDelete("/api/roles/{id}", RoleEndpoints.DeleteRole);
         }
         public static void MapPaymentEndpoints(this WebApplication app)
         {
