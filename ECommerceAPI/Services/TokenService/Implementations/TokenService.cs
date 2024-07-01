@@ -17,7 +17,7 @@ namespace ECommerceAPI.Services.TokenService.Implementations
         public async Task<LoginResponseDto> GenerateTokenAsync(User user)
         {
             var accessToken = GenerateAccessTokenAsync(user);
-var accessTokenExpiryTime = DateTime.Now.AddMinutes(Convert.ToDouble(configuration["Jwt:AccessTokenValidityInMinutes"]));
+            var accessTokenExpiryTime = DateTime.Now.AddMinutes(Convert.ToDouble(configuration["Jwt:AccessTokenValidityInMinutes"]));
             var refreshToken = GenerateRefreshToken();
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(Convert.ToDouble(configuration["Jwt:RefreshTokenValidity"]));
@@ -27,7 +27,7 @@ var accessTokenExpiryTime = DateTime.Now.AddMinutes(Convert.ToDouble(configurati
                 AccessToken = accessToken,
                 AccessTokenExpiryTime = accessTokenExpiryTime,
                 RefreshToken = refreshToken,
-                RefreshTokenExpiryTime = user.RefreshTokenExpiryTime
+                RefreshTokenExpiryTime = user.RefreshTokenExpiryTime!.Value
             };
         }
         private string GenerateAccessTokenAsync(User user)

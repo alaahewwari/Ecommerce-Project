@@ -1,11 +1,12 @@
-﻿namespace ECommerceAPI.Utilities.Email
+﻿using System.Net;
+namespace ECommerceAPI.Utilities.Email
 {
     public static class ConfirmationUrlBuilder
     {
-public static string BuildConfirmationUrl(string baseUrl, string email, string token)
+        public static string BuildConfirmationUrl(string baseUrl, string email, string token)
         {
-            var encodedEmail = Uri.EscapeDataString(email);
-            var encodedToken = Uri.EscapeDataString(token);
+            var encodedEmail = WebUtility.UrlEncode(email);
+            var encodedToken = WebUtility.UrlEncode(token);
             return $"{baseUrl}?email={encodedEmail}&token={encodedToken}";
         }
     }

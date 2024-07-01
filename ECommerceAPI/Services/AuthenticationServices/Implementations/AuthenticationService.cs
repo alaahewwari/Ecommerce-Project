@@ -20,6 +20,7 @@ namespace ECommerceAPI.Services.AuthenticationServices.Implementations
         IUrlBuilder urlBuilder,
         ITokenService tokenService,
         IUserRepository userRepository,
+        IAuthenticatedUserService authenticatedUserService,
         IEmailService emailService)
         : IAuthenticationService
     { 
@@ -84,7 +85,7 @@ var isConfirmed = await identityService.IsEmailConfirmedAsync(user);
             var token = await tokenService.GenerateTokenAsync(user);
             return token;
         }
-         public async Task<ErrorOr<LoginResponseDto>> RefreshTokenAsync(string refreshToken)
+        public async Task<ErrorOr<LoginResponseDto>> RefreshTokenAsync(string refreshToken)
         {
             if (refreshToken.IsNullOrEmpty())
             {
@@ -102,11 +103,66 @@ var user = await userRepository.FindByRefreshTokenAsync(refreshToken);
             var result =await tokenService.GenerateTokenAsync(user);
             return result;
         }
+        public async Task<ErrorOr<SuccessResponse>> ForgotPasswordAsync(string email)
+        {
+            var user = await identityService.FindByEmailAsync(email);
+            if (user is null)
+            {
+                return IdentityErrors.UserNotFound;
+            }
+            var baseUrl = Constants.ResetPasswordUrl;
+            var token = await GenerateAndSendResetPsswordEmailAsync(user,baseUrl);
+            if (token.IsNullOrEmpty())
+            {
+                return IdentityErrors.InvalidToken;
+            }
+            return new SuccessResponse("Paswword reset email sent successfully. Please check your email to reset your password.");
+        }
+        public async Task<ErrorOr<SuccessResponse>> ResetPasswordAsync(ResetPasswordRequestDto request)
+        {
+            var user = await identityService.FindByEmailAsync(request.Email);
+            if (user is null)
+            {
+                return IdentityErrors.UserNotFound;
+            }
+            var result = await identityService.ResetPasswordAsync(user, request.Token, request.NewPassword);
+            if (!result)
+            {
+                return IdentityErrors.InvalidToken;
+            }
+            return new SuccessResponse("Password reset successfully.");
+        }
+        public async Task<ErrorOr<SuccessResponse>> ChangePasswordAsync(ChangePasswordRequestDto request)
+        {
+            var userId = authenticatedUserService.GetAuthenticatedUserIdAsync();
+            if (userId == 0)
+            {
+                return IdentityErrors.Unauthenticated;
+            }
+            var user = await identityService.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return IdentityErrors.UserNotFound;
+            }
+            var response = await identityService.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+            if (!response)
+            {
+                return IdentityErrors.ChangePasswordFailed;
+            }
+            return new SuccessResponse("Password changed successfully");
+        }
         private async Task<string> GenerateAndSendEmailConfirmationEmailAsync(User user,string baseUrl)
         {
             var token = await identityService.GenerateEmailConfirmationTokenAsync(user);
             var confirmationUrl = ConfirmationUrlBuilder.BuildConfirmationUrl(baseUrl, user.Email!, token);
             await emailService.SendConfirmationEmailAsync(user.Email!, confirmationUrl);
+            return token;
+        }
+        private async Task<string> GenerateAndSendResetPsswordEmailAsync(User user, string baseUrl)
+        {
+            var token = await identityService.GeneratePasswordResetTokenAsync(user);
+            var confirmationUrl = ConfirmationUrlBuilder.BuildConfirmationUrl(baseUrl, user.Email!, token);
+            await emailService.SendResetPasswordEmailAsync(user.Email!, confirmationUrl);
             return token;
         }
     }

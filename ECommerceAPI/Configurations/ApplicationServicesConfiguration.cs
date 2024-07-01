@@ -36,7 +36,8 @@ namespace ECommerceAPI.Configurations
     {
         public static void ConfigureBusinessServices(this IServiceCollection services)
         {
-services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
             services.AddScoped<IUrlBuilder, UrlBuilder>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IIdentityService, IdentityService>();

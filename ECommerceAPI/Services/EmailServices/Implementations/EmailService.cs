@@ -3,9 +3,7 @@ using ECommerceAPI.Services.EmailServices.Interfaces;
 using ECommerceAPI.Utilities.Email;
 using MailKit.Security;
 using MimeKit;
-
 namespace ECommerceAPI.Services.EmailServices.Implementations;
-
 public class EmailService(EmailConfiguration emailConfig) : IEmailService
 {
     /// <summary>
@@ -18,10 +16,8 @@ public class EmailService(EmailConfiguration emailConfig) : IEmailService
     public async Task SendEmailAsync(string to, string subject, string body)
     {
         var recipients = new List<string> { to };
-
         // 1. Prepare the message in the form of a MimeMessage object
         var mimeMessage = CreateMimeMessage(recipients, subject, body);
-
         // 2. Send the message
         await Send(mimeMessage);
     }
@@ -31,7 +27,12 @@ public class EmailService(EmailConfiguration emailConfig) : IEmailService
         var body = EmailMessageGenerator.GenerateConfirmEmailMessageBody(confirmationLink);
         await SendEmailAsync(to, subject, body);
     }
-    
+    public async Task SendResetPasswordEmailAsync(string to, string resetLink)
+    {
+        var subject = "Reset Password";
+        var body = EmailMessageGenerator.GenerateForgotPasswordMessageBody(resetLink);
+        await SendEmailAsync(to, subject, body);
+    }
     /// <summary>
     /// Another overload of the SendEmailAsync method, but receives the body as a MimeEntity object
     /// </summary>
@@ -66,7 +67,6 @@ public class EmailService(EmailConfiguration emailConfig) : IEmailService
 
             smtpClient.AuthenticationMechanisms.Remove("XOAUTH2");
             await smtpClient.AuthenticateAsync(emailConfig.UserName, emailConfig.Password);
-
             // Send Email
             await smtpClient.SendAsync(message);
         }
@@ -92,7 +92,6 @@ public class EmailService(EmailConfiguration emailConfig) : IEmailService
             var name = recipient[..recipient.IndexOf('@')]; // Substring from the start of the string to the first occurrence of '@'
             to.Add(new MailboxAddress(name, recipient));
         }
-
         var mimeMessage = new MimeMessage
         {
             From = { new MailboxAddress("ECommerceApp", emailConfig.From) },
@@ -102,9 +101,7 @@ public class EmailService(EmailConfiguration emailConfig) : IEmailService
                 Text = content
             },
         };
-
         mimeMessage.To.AddRange(to);
-
         return mimeMessage;
     }
     /// <summary>
@@ -118,22 +115,18 @@ public class EmailService(EmailConfiguration emailConfig) : IEmailService
     {
         // Convert the list of strings to a list of MailboxAddress objects
         var to = new List<MailboxAddress>();
-
         foreach (var recipient in recipients)
         {
             var name = recipient[..recipient.IndexOf('@')]; // Substring from the start of the string to the first occurrence of '@'
             to.Add(new MailboxAddress(name, recipient));
         }
-
         var mimeMessage = new MimeMessage
         {
             From = { new MailboxAddress("ECommerceApp", emailConfig.From) },
             Subject = subject,
             Body = body
         };
-
         mimeMessage.To.AddRange(to);
         return mimeMessage;
     }
-
 }

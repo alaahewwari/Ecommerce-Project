@@ -10,5 +10,9 @@ namespace ECommerceAPI.Services.AuthenticationServices.Interfaces
         Task<ErrorOr<SuccessResponse>> ConfirmEmailAsync(string email, string token);
         Task<ErrorOr<LoginResponseDto>> LoginAsync(LoginRequestDto request);
         Task<ErrorOr<LoginResponseDto>> RefreshTokenAsync(string token);
+        Task<ErrorOr<SuccessResponse>> ForgotPasswordAsync(string email);
+        Task<ErrorOr<SuccessResponse>> ResetPasswordAsync(ResetPasswordRequestDto request);
+        Task<ErrorOr<SuccessResponse>> ChangePasswordAsync(ChangePasswordRequestDto changePasswordRequest);
+
     }
 }
