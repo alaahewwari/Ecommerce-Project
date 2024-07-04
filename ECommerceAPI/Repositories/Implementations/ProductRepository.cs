@@ -12,7 +12,7 @@ namespace ECommerceAPI.Repositories.Implementations
     {
         public async Task<Product?> CreateProductAsync(Product product)
         {
-await context.Products.AddAsync(product);
+            await context.Products.AddAsync(product);
             await context.SaveChangesAsync();
             return product;
         }
@@ -21,6 +21,8 @@ await context.Products.AddAsync(product);
             var product = await context.Products
                 .Include(p => p.Brand)
                 .Include(p => p.Category)
+                .Include(p => p.CreatedUser)
+                .Include(p => p.UpdatedUser)
                 .AsNoTracking()
                 .Where(p => p.Id == productId)
                 .FirstOrDefaultAsync();
@@ -45,6 +47,8 @@ await context.Products.AddAsync(product);
             var products = await context.Products
                 .Include(p => p.Brand)
                 .Include(p => p.Category)
+                .Include(p => p.CreatedUser)
+                .Include(p => p.UpdatedUser)
                 .AsNoTracking()
                 .ToListAsync();
             return products;
