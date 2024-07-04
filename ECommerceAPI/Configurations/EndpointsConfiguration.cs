@@ -46,7 +46,12 @@ namespace ECommerceAPI.Configurations
         }
         public static void MapUserEndpoints(this WebApplication app)
         {
-            
+            app.MapPost("/api/users/{id}/roles/{roleId}", UserEndpoints.AssignRoleToUser);
+            app.MapPost("/api/users", UserEndpoints.CreateUser);
+            app.MapPut("/api/users/{id}", UserEndpoints.UpdateUser);
+            app.MapGet("/api/users", UserEndpoints.GetUsers);
+            app.MapGet("/api/users/{id}", UserEndpoints.GetUserById);
+            app.MapDelete("/api/users/{id}", UserEndpoints.DeleteUser);
         }
         public static void MapCartEndpoints(this WebApplication app)
         {
