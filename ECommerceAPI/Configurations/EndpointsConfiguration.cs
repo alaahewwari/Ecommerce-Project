@@ -20,6 +20,10 @@ namespace ECommerceAPI.Configurations
                 app.MapGet("/api/products/{id}", ProductEndpoints.GetProductById);
             app.MapPut("/api/products/{id}", ProductEndpoints.UpdateProduct);
         app.MapDelete("/api/products/{id}", ProductEndpoints.DeleteProduct);
+            app.MapPost("/api/products/{id}/attributes/{attributeValueId}", ProductEndpoints.AddAttributeToProduct);
+            app.MapGet("/api/products/{id}/attributes", ProductEndpoints.GetProductAttributes);
+            app.MapPut("/api/products/{id}/attributes/{attributeValueId}", ProductEndpoints.UpdateProductAttribute);
+            app.MapDelete("/api/products/{id}/attributes/{attributeValueId}", ProductEndpoints.DeleteProductAttribute);
         }
         public static void MapCategoryEndpoints(this WebApplication app)
         {
