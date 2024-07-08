@@ -111,5 +111,86 @@ namespace ECommerceAPI.Services.ProductServices.Implementations
             }
             return new SuccessResponse("Product deleted successfully");
         }
+        public async Task<ErrorOr<SuccessResponse>> AddAttributeToProductAsync(AttributeRequestDto attributeValueDto, long productId, long attributeValueId)
+        {
+            var product = await productRepository.GetProductByIdAsync(productId);
+            if (product is null)
+            {
+                return ProductErrors.ProductNotFound;
+            }
+            var value = await productRepository.GetAttributeValueByIdAsync(attributeValueId);
+            if (value is null)
+            {
+                return ProductErrors.AttributeNotFound;
+            }
+            var attributeValue = mapper.Map<ProductAttributeValue>(attributeValueDto);
+            attributeValue.ProductId = productId;
+            attributeValue.AttributeValueId = attributeValueId;
+            var existingAttribute = await productRepository.GetProductAttributesAsync(productId);
+            if (existingAttribute.Any(a => a.AttributeValueId == attributeValueId))
+            {
+                attributeValue.Quantity += existingAttribute.FirstOrDefault(a => a.AttributeValueId == attributeValueId)!.Quantity;
+                var updateResult = await productRepository.UpdateProductAttributeAsync(attributeValue);
+                return new SuccessResponse("Attribute already exists, quantity updated");
+            }
+            var result = await productRepository.AddAttributeToProductAsync(attributeValue);
+            if (!result)
+            {
+                return ProductErrors.ProductAttributeCreationFailed;
+            }
+            return new SuccessResponse("Attribute added successfully");
+        }
+        public async Task<ErrorOr<IList<AttributeResponseDto>>> GetProductAttributesAsync(long productId)
+        {
+            var product = await productRepository.GetProductByIdAsync(productId);
+            if (product is null)
+            {
+                return ProductErrors.ProductNotFound;
+            }
+            var attributes = await productRepository.GetProductAttributesAsync(productId);
+            var response = mapper.Map<IList<AttributeResponseDto>>(attributes);
+            return response.ToList();
+        }
+        public async Task<ErrorOr<SuccessResponse>> UpdateProductAttributeAsync(AttributeRequestDto attributeValueDto, long productId, long attributeValueId)
+        {
+            var product = await productRepository.GetProductByIdAsync(productId);
+            if (product is null)
+            {
+                return ProductErrors.ProductNotFound;
+            }
+            var value = await productRepository.GetAttributeValueByIdAsync(attributeValueId);
+            if (value is null)
+            {
+                return ProductErrors.AttributeNotFound;
+            }
+            var attributeValue = mapper.Map<ProductAttributeValue>(attributeValueDto);
+            attributeValue.ProductId = productId;
+            attributeValue.AttributeValueId = attributeValueId;
+            var result = await productRepository.UpdateProductAttributeAsync(attributeValue);
+            if (!result)
+            {
+                return ProductErrors.ProductAttributeUpdateFailed;
+            }
+            return new SuccessResponse("Attribute updated successfully");
+        }
+        public async Task<ErrorOr<SuccessResponse>> DeleteProductAttributeAsync(long productId, long attributeValueId)
+        {
+            var product = await productRepository.GetProductByIdAsync(productId);
+            if (product is null)
+            {
+                return ProductErrors.ProductNotFound;
+            }
+            var values = await productRepository.GetProductAttributesAsync(productId);
+            if (!values.Any(v => v.AttributeValueId == attributeValueId))
+            {
+                return ProductErrors.AttributeNotFound;
+            }
+            var result = await productRepository.DeleteProductAttributeAsync(productId, attributeValueId);
+            if (!result)
+            {
+                return ProductErrors.ProductAttributeDeletionFailed;
+            }
+            return new SuccessResponse("Attribute deleted successfully");
+        }
     }
 }

@@ -12,5 +12,9 @@ namespace ECommerceAPI.Services.ProductServices.Interfaces
         Task<ErrorOr<ProductResponseDto>> GetProductByIdAsync(long id);
         Task<ErrorOr<IList<ProductResponseDto>>> GetProductsAsync(); 
         Task<ErrorOr<SuccessResponse>> DeleteProductAsync(long id);
+        Task<ErrorOr<SuccessResponse>> AddAttributeToProductAsync(AttributeRequestDto attributeValueDto, long productId, long attributeValueId);
+        Task<ErrorOr<IList<AttributeResponseDto>>> GetProductAttributesAsync(long productId);
+        Task<ErrorOr<SuccessResponse>> UpdateProductAttributeAsync(AttributeRequestDto attributeValueDto, long productId, long attributeValueId);
+        Task<ErrorOr<SuccessResponse>> DeleteProductAttributeAsync(long productId, long attributeValueId);
     }
 }
