@@ -21,6 +21,6 @@
         public ICollection<Image> Images { get; set; } = new List<Image>();
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
-
+        public ICollection<ProductAttributeValue> Values { get; set; } = new List<ProductAttributeValue>();
     }
 }
