@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Identity.Client;
 namespace ECommerceAPI.Data.Models
 {
     public class User : IdentityUser<long>

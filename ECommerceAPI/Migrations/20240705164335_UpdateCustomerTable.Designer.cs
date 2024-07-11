@@ -4,6 +4,7 @@ using ECommerceAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240705164335_UpdateCustomerTable")]
+    partial class UpdateCustomerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace ECommerceAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CategoryCategoryAttribute", b =>
+                {
+                    b.Property<long>("CategoryAttributesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("categoriesId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CategoryAttributesId", "categoriesId");
+
+                    b.HasIndex("categoriesId");
+
+                    b.ToTable("CategoryCategoryAttribute");
+                });
 
             modelBuilder.Entity("ECommerceAPI.Data.Models.Address", b =>
                 {
@@ -53,59 +71,6 @@ namespace ECommerceAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Addresses");
-                });
-
-            modelBuilder.Entity("ECommerceAPI.Data.Models.AttributeValue", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AttributeValues");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            Name = "Color",
-                            Value = "Black"
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            Name = "Color",
-                            Value = "White"
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            Name = "Size",
-                            Value = "Small"
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            Name = "Size",
-                            Value = "Medium"
-                        },
-                        new
-                        {
-                            Id = 5L,
-                            Name = "Size",
-                            Value = "Large"
-                        });
                 });
 
             modelBuilder.Entity("ECommerceAPI.Data.Models.Brand", b =>
@@ -221,6 +186,50 @@ namespace ECommerceAPI.Migrations
                             Id = 3L,
                             Name = "Books"
                         });
+                });
+
+            modelBuilder.Entity("ECommerceAPI.Data.Models.CategoryAttribute", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CategoryAttributes");
+                });
+
+            modelBuilder.Entity("ECommerceAPI.Data.Models.CategoryAttributeValue", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ProductAttributeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductAttributeId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CategoryAttributeValues");
                 });
 
             modelBuilder.Entity("ECommerceAPI.Data.Models.Currency", b =>
@@ -468,32 +477,6 @@ namespace ECommerceAPI.Migrations
                     b.HasIndex("UpdatedUserId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("ECommerceAPI.Data.Models.ProductAttributeValue", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("AttributeValueId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ProductId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AttributeValueId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductAttributeValues");
                 });
 
             modelBuilder.Entity("ECommerceAPI.Data.Models.Review", b =>
@@ -820,6 +803,21 @@ namespace ECommerceAPI.Migrations
                     b.ToTable("Customers", (string)null);
                 });
 
+            modelBuilder.Entity("CategoryCategoryAttribute", b =>
+                {
+                    b.HasOne("ECommerceAPI.Data.Models.CategoryAttribute", null)
+                        .WithMany()
+                        .HasForeignKey("CategoryAttributesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ECommerceAPI.Data.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("categoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ECommerceAPI.Data.Models.Cart", b =>
                 {
                     b.HasOne("ECommerceAPI.Data.Models.Customer", "Customer")
@@ -848,6 +846,25 @@ namespace ECommerceAPI.Migrations
                     b.Navigation("Cart");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ECommerceAPI.Data.Models.CategoryAttributeValue", b =>
+                {
+                    b.HasOne("ECommerceAPI.Data.Models.CategoryAttribute", "ProductAttribute")
+                        .WithMany()
+                        .HasForeignKey("ProductAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ECommerceAPI.Data.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductAttribute");
                 });
 
             modelBuilder.Entity("ECommerceAPI.Data.Models.Image", b =>
@@ -941,25 +958,6 @@ namespace ECommerceAPI.Migrations
                     b.Navigation("CreatedUser");
 
                     b.Navigation("UpdatedUser");
-                });
-
-            modelBuilder.Entity("ECommerceAPI.Data.Models.ProductAttributeValue", b =>
-                {
-                    b.HasOne("ECommerceAPI.Data.Models.AttributeValue", "AttributeValue")
-                        .WithMany("ProductAttributeValues")
-                        .HasForeignKey("AttributeValueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ECommerceAPI.Data.Models.Product", "Product")
-                        .WithMany("ProductAttributeValues")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AttributeValue");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("ECommerceAPI.Data.Models.Review", b =>
@@ -1075,11 +1073,6 @@ namespace ECommerceAPI.Migrations
                     b.Navigation("Address");
                 });
 
-            modelBuilder.Entity("ECommerceAPI.Data.Models.AttributeValue", b =>
-                {
-                    b.Navigation("ProductAttributeValues");
-                });
-
             modelBuilder.Entity("ECommerceAPI.Data.Models.Brand", b =>
                 {
                     b.Navigation("Products");
@@ -1123,8 +1116,6 @@ namespace ECommerceAPI.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("OrderItems");
-
-                    b.Navigation("ProductAttributeValues");
                 });
 
             modelBuilder.Entity("ECommerceAPI.Data.Models.Role", b =>
