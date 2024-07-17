@@ -1,5 +1,5 @@
 ﻿using ErrorOr;
-namespace ECommerceAPI.ErrorHandling
+namespace ECommerceAPI.ErrorHandling.RoleErrors
 {
     public class RoleErrors
     {

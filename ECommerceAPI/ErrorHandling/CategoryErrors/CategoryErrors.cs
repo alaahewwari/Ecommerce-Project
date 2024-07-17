@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 
-namespace ECommerceAPI.ErrorHandling
+namespace ECommerceAPI.ErrorHandling.CategoryErrors
 {
     public static class CategoryErrors
     {

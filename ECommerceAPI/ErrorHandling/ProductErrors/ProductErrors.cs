@@ -1,5 +1,5 @@
 ﻿using ErrorOr;
-namespace ECommerceAPI.ErrorHandling
+namespace ECommerceAPI.ErrorHandling.ProductErrors
 {
     public class ProductErrors
     {
@@ -21,5 +21,17 @@ namespace ECommerceAPI.ErrorHandling
         public static readonly Error ProductCreationFailed = Error.Failure(
                        code: "ProductCreationFailed",
                        description: "Failed to create the product.");
+        public static readonly Error AttributeNotFound = Error.NotFound(
+                       code: "AttributeNotFound",
+                       description: "The specified attribute could not be found.");
+        public static readonly Error ProductAttributeCreationFailed = Error.Failure(
+                       code: "ProductAttributeCreationFailed",
+                       description: "Failed to add the attribute to the product.");
+        public static readonly Error ProductAttributeUpdateFailed = Error.Failure(
+                       code: "ProductAttributeUpdateFailed",
+                       description: "Failed to update the attribute of the product.");
+        public static readonly Error ProductAttributeDeletionFailed = Error.Failure(
+                       code: "ProductAttributeDeletionFailed",
+                       description: "Failed to delete the attribute from the product.");
     }
 }

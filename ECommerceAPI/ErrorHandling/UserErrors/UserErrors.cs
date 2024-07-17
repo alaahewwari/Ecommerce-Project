@@ -1,6 +1,5 @@
 ﻿using ErrorOr;
-
-namespace ECommerceAPI.ErrorHandling
+namespace ECommerceAPI.ErrorHandling.UserErrors
 {
     public class UserErrors
     {
@@ -16,5 +15,6 @@ namespace ECommerceAPI.ErrorHandling
         public static readonly Error UserDeletionFailed = Error.Failure(
             code: "UserDeletionFailed",
             description: "Failed to delete the user.");
+
     }
 }
