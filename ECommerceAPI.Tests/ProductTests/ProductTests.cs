@@ -3,7 +3,7 @@ using ECommerceAPI.Common;
 using ECommerceAPI.Dtos.Product.Requests;
 using ECommerceAPI.Dtos.Product.Responses;
 using ECommerceAPI.Endpoints;
-using ECommerceAPI.ErrorHandling;
+using ECommerceAPI.ErrorHandling.ProductErrors;
 using ECommerceAPI.Services.ProductServices.Interfaces;
 using ErrorOr;
 using FluentAssertions;

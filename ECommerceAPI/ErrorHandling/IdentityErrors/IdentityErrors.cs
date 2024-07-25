@@ -1,5 +1,5 @@
 ﻿using ErrorOr;
-namespace ECommerceAPI.ErrorHandling
+namespace ECommerceAPI.ErrorHandling.IdentityErrors
 {
     public static class IdentityErrors
     {
